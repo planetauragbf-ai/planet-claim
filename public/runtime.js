@@ -214,20 +214,20 @@
   window.PCRT = { sb, ready, session: () => SESSION, signOut: () => sb.auth.signOut() };
 
   /* ---------- écrans de connexion ---------- */
-  const CSS = `#pcg{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:var(--bg,#f1f6f7);color:var(--ink,#0b2530);font:14px/1.5 Poppins,system-ui,sans-serif;padding:16px}
-#pcg form{width:min(380px,100%);background:var(--sf,#fff);border:1px solid var(--ln,#d3e1e5);border-radius:8px;padding:28px}
-#pcg h1{font:600 24px/1.2 "Playfair Display",Georgia,serif;margin:0 0 4px}#pcg p{margin:0 0 16px;color:var(--mut,#52707b)}
-#pcg label{display:block;margin:0 0 12px;font-size:13px}#pcg input{width:100%;padding:9px 12px;border:1px solid var(--ln,#d3e1e5);border-radius:6px;background:var(--sf,#fff);color:inherit;font:inherit;margin-top:4px}
-#pcg button{width:100%;padding:10px;border-radius:6px;border:1px solid var(--ac,#12475b);background:var(--ac,#12475b);color:var(--onac,#fff);font:500 14px Poppins,system-ui,sans-serif;cursor:pointer;margin-top:4px}
-#pcg button.s{background:transparent;color:var(--ac,#12475b)}#pcg .lk{background:none;border:0;color:var(--ac,#12475b);padding:6px 0;text-decoration:underline;width:auto}
-#pcg .er{color:var(--ko,#722f45);min-height:1.5em;margin:10px 0 0}#pcg .or{text-align:center;margin:12px 0;color:var(--na,#8aa3ab);font-size:12px}
-#pcout{position:fixed;left:12px;bottom:12px;z-index:2147483000;display:flex;gap:4px}#pcout button{border:1px solid var(--ln,#d3e1e5);background:var(--sf,#fff);color:var(--mut,#52707b);border-radius:20px;padding:4px 12px;font:12px Poppins,system-ui,sans-serif;cursor:pointer;opacity:.85}
-#pcout button:hover{opacity:1;color:var(--ac,#12475b)}`;
+  const CSS = `#pcrtg{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:var(--bg,#f1f6f7);color:var(--ink,#0b2530);font:14px/1.5 Poppins,system-ui,sans-serif;padding:16px}
+#pcrtg form{width:min(380px,100%);background:var(--sf,#fff);border:1px solid var(--ln,#d3e1e5);border-radius:8px;padding:28px}
+#pcrtg h1{font:600 24px/1.2 "Playfair Display",Georgia,serif;margin:0 0 4px}#pcrtg p{margin:0 0 16px;color:var(--mut,#52707b)}
+#pcrtg label{display:block;margin:0 0 12px;font-size:13px}#pcrtg input{width:100%;padding:9px 12px;border:1px solid var(--ln,#d3e1e5);border-radius:6px;background:var(--sf,#fff);color:inherit;font:inherit;margin-top:4px}
+#pcrtg button{width:100%;padding:10px;border-radius:6px;border:1px solid var(--ac,#12475b);background:var(--ac,#12475b);color:var(--onac,#fff);font:500 14px Poppins,system-ui,sans-serif;cursor:pointer;margin-top:4px}
+#pcrtg button.s{background:transparent;color:var(--ac,#12475b)}#pcrtg .lk{background:none;border:0;color:var(--ac,#12475b);padding:6px 0;text-decoration:underline;width:auto}
+#pcrtg .er{color:var(--ko,#722f45);min-height:1.5em;margin:10px 0 0}#pcrtg .or{text-align:center;margin:12px 0;color:var(--na,#8aa3ab);font-size:12px}
+#pcrt-out{position:fixed;left:12px;bottom:12px;z-index:2147483000;display:flex;gap:4px}#pcrt-out button{border:1px solid var(--ln,#d3e1e5);background:var(--sf,#fff);color:var(--mut,#52707b);border-radius:20px;padding:4px 12px;font:12px Poppins,system-ui,sans-serif;cursor:pointer;opacity:.85}
+#pcrt-out button:hover{opacity:1;color:var(--ac,#12475b)}`;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   function whenBody(f) { if (document.body) f(); else document.addEventListener('DOMContentLoaded', f); }
   function box(html) {
-    let g = document.getElementById('pcg');
-    if (!g) { if (!document.getElementById('pcg-css')) { const s = document.createElement('style'); s.id = 'pcg-css'; s.textContent = CSS; document.head.appendChild(s); } g = document.createElement('div'); g.id = 'pcg'; document.body.appendChild(g); }
+    let g = document.getElementById('pcrtg');
+    if (!g) { if (!document.getElementById('pcrtg-css')) { const s = document.createElement('style'); s.id = 'pcrtg-css'; s.textContent = CSS; document.head.appendChild(s); } g = document.createElement('div'); g.id = 'pcrtg'; document.body.appendChild(g); }
     g.innerHTML = html; return g;
   }
   const ERR = { 'Invalid login credentials': 'E-mail ou mot de passe incorrect.', 'Email not confirmed': 'E-mail pas encore confirmé : utilisez le lien reçu.', 'Signups not allowed for this instance': "Ce compte n'existe pas : demandez à l'administrateur de vous créer un accès." };
@@ -235,44 +235,44 @@
   function gate(text, signedIn) {
     whenBody(() => {
       const g = box(`<form autocomplete="on"><h1>Planet’Claim</h1><p>Suivi des sinistres — accès réservé.</p>
-${signedIn ? '<button type="button" id="pcg-x">Changer de compte</button>' : `<button type="button" id="pcg-go" class="s">Se connecter avec Google</button><div class="or">ou</div>
-<label>E-mail<input id="pcg-e" type="email" autocomplete="username" required></label>
-<label>Mot de passe<input id="pcg-p" type="password" autocomplete="current-password" required></label>
-<button type="submit">Se connecter</button><button type="button" class="lk" id="pcg-r">Mot de passe oublié ?</button>`}
-<p class="er" id="pcg-m">${text ? esc(text) : ''}</p></form>`);
-      const m = t => (g.querySelector('#pcg-m').textContent = t);
-      g.querySelector('form').onsubmit = async e => { e.preventDefault(); m(''); const { error } = await sb.auth.signInWithPassword({ email: g.querySelector('#pcg-e').value.trim(), password: g.querySelector('#pcg-p').value }); if (error) m(msg(error)); };
-      const go = g.querySelector('#pcg-go'); if (go) go.onclick = async () => { const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } }); if (error) m(msg(error)); };
-      const r = g.querySelector('#pcg-r'); if (r) r.onclick = async () => { const e = g.querySelector('#pcg-e').value.trim(); if (!e) return m('Saisissez votre e-mail puis recliquez.'); const { error } = await sb.auth.resetPasswordForEmail(e, { redirectTo: location.origin + location.pathname }); m(error ? msg(error) : 'Si ce compte existe, un e-mail vient d’être envoyé.'); };
-      const x = g.querySelector('#pcg-x'); if (x) x.onclick = () => sb.auth.signOut();
+${signedIn ? '<button type="button" id="pcrtg-x">Changer de compte</button>' : `<button type="button" id="pcrtg-go" class="s">Se connecter avec Google</button><div class="or">ou</div>
+<label>E-mail<input id="pcrtg-e" type="email" autocomplete="username" required></label>
+<label>Mot de passe<input id="pcrtg-p" type="password" autocomplete="current-password" required></label>
+<button type="submit">Se connecter</button><button type="button" class="lk" id="pcrtg-r">Mot de passe oublié ?</button>`}
+<p class="er" id="pcrtg-m">${text ? esc(text) : ''}</p></form>`);
+      const m = t => (g.querySelector('#pcrtg-m').textContent = t);
+      g.querySelector('form').onsubmit = async e => { e.preventDefault(); m(''); const { error } = await sb.auth.signInWithPassword({ email: g.querySelector('#pcrtg-e').value.trim(), password: g.querySelector('#pcrtg-p').value }); if (error) m(msg(error)); };
+      const go = g.querySelector('#pcrtg-go'); if (go) go.onclick = async () => { const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } }); if (error) m(msg(error)); };
+      const r = g.querySelector('#pcrtg-r'); if (r) r.onclick = async () => { const e = g.querySelector('#pcrtg-e').value.trim(); if (!e) return m('Saisissez votre e-mail puis recliquez.'); const { error } = await sb.auth.resetPasswordForEmail(e, { redirectTo: location.origin + location.pathname }); m(error ? msg(error) : 'Si ce compte existe, un e-mail vient d’être envoyé.'); };
+      const x = g.querySelector('#pcrtg-x'); if (x) x.onclick = () => sb.auth.signOut();
     });
   }
   function gatePassword(user, done, cancellable) {
     whenBody(() => {
       const g = box(`<form><h1>${cancellable ? 'Changer mon mot de passe' : 'Choisissez votre mot de passe'}</h1><p>${esc(user.email)}</p>
-<label>Nouveau mot de passe (10 caractères minimum)<input id="pcg-n" type="password" autocomplete="new-password" minlength="10" required></label>
-<label>Confirmation<input id="pcg-c" type="password" autocomplete="new-password" minlength="10" required></label>
-<button type="submit">Enregistrer</button>${cancellable ? '<button type="button" class="lk" id="pcg-k">Annuler</button>' : ''}<p class="er" id="pcg-m"></p></form>`);
-      const m = t => (g.querySelector('#pcg-m').textContent = t);
+<label>Nouveau mot de passe (10 caractères minimum)<input id="pcrtg-n" type="password" autocomplete="new-password" minlength="10" required></label>
+<label>Confirmation<input id="pcrtg-c" type="password" autocomplete="new-password" minlength="10" required></label>
+<button type="submit">Enregistrer</button>${cancellable ? '<button type="button" class="lk" id="pcrtg-k">Annuler</button>' : ''}<p class="er" id="pcrtg-m"></p></form>`);
+      const m = t => (g.querySelector('#pcrtg-m').textContent = t);
       g.querySelector('form').onsubmit = async e => {
-        e.preventDefault(); const a = g.querySelector('#pcg-n').value;
-        if (a !== g.querySelector('#pcg-c').value) return m('Les deux saisies sont différentes.');
+        e.preventDefault(); const a = g.querySelector('#pcrtg-n').value;
+        if (a !== g.querySelector('#pcrtg-c').value) return m('Les deux saisies sont différentes.');
         const { error } = await sb.auth.updateUser({ password: a }); if (error) return m(msg(error));
         g.remove(); done();
       };
-      const k = g.querySelector('#pcg-k'); if (k) k.onclick = () => g.remove();
+      const k = g.querySelector('#pcrtg-k'); if (k) k.onclick = () => g.remove();
     });
   }
   function ungate() {
     whenBody(() => {
-      const g = document.getElementById('pcg'); if (g) g.remove();
-      if (document.getElementById('pcout')) return;
-      const d = document.createElement('div'); d.id = 'pcout';
-      d.innerHTML = '<button type="button" id="pco-pw">Mot de passe</button><button type="button" id="pco-x">Déconnexion</button>';
+      const g = document.getElementById('pcrtg'); if (g) g.remove();
+      if (document.getElementById('pcrt-out')) return;
+      const d = document.createElement('div'); d.id = 'pcrt-out';
+      d.innerHTML = '<button type="button" id="pcrt-o-pw">Mot de passe</button><button type="button" id="pcrt-o-x">Déconnexion</button>';
       d.title = SESSION.email; document.body.appendChild(d);
-      d.querySelector('#pco-pw').onclick = () => gatePassword({ email: SESSION.email }, () => alert('Mot de passe modifié.'), true);
-      d.querySelector('#pco-x').onclick = () => sb.auth.signOut();
-      if (!document.getElementById('pcg-css')) { const s = document.createElement('style'); s.id = 'pcg-css'; s.textContent = CSS; document.head.appendChild(s); }
+      d.querySelector('#pcrt-o-pw').onclick = () => gatePassword({ email: SESSION.email }, () => alert('Mot de passe modifié.'), true);
+      d.querySelector('#pcrt-o-x').onclick = () => sb.auth.signOut();
+      if (!document.getElementById('pcrtg-css')) { const s = document.createElement('style'); s.id = 'pcrtg-css'; s.textContent = CSS; document.head.appendChild(s); }
     });
   }
   // Masque l'application tant que la session n'est pas prête.
