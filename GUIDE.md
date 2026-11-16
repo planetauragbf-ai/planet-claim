@@ -94,7 +94,8 @@ Pour créer les comptes directement depuis la page Administration, installez une
 2. Nom de la fonction (en haut, à la place de `hello-world` ou du nom proposé) : **`admin-users`**, exactement.
 3. Effacez tout le code d’exemple. Ouvrez [`supabase/functions/admin-users/index.ts`](supabase/functions/admin-users/index.ts) sur GitHub → bouton *Copy raw file* → collez dans l’éditeur.
 4. **Deploy function** (en bas à droite). Attendez le message de réussite.
-5. Onglet **Details** (ou **Settings**) de la fonction → désactivez **Verify JWT with legacy secret** (ou « Enforce JWT verification ») → **Save**. La fonction contrôle elle-même la connexion et le rôle admin.
+5. Regardez l’**URL** de la fonction dans la liste : si elle ne se termine pas par `/admin-users` (Supabase génère parfois un autre identifiant, ex. `rapid-responder`), recopiez cette fin d’URL dans `public/supabase-config.js`, ligne `adminFunction`.
+6. Onglet **Details** (ou **Settings**) de la fonction → désactivez **Verify JWT with legacy secret** (ou « Enforce JWT verification ») → **Save**. La fonction contrôle elle-même la connexion et le rôle admin.
 
 Vérification : sur la page `/admin`, aucun message rouge « Création automatique des comptes indisponible » ne doit apparaître, et la colonne **Dernière connexion** est remplie.
 

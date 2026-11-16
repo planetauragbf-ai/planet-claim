@@ -14,7 +14,7 @@
      (seule détentrice de la clé service_role). Sans elle, on gère au moins les rôles. */
   let FN = true;
   async function fn(body) {
-    const { data, error } = await sb.functions.invoke('admin-users', { body });
+    const { data, error } = await sb.functions.invoke((window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.adminFunction) || 'admin-users', { body });
     if (error) {
       let m = error.message, st = error.context && error.context.status;
       try { const j = await error.context.json(); m = j.error || j.message || m; } catch (_) {}
