@@ -40,6 +40,8 @@ td select{padding:4px 6px}td .acts{display:flex;gap:6px;flex-wrap:wrap;justify-c
 <div class="row"><input type="file" id="f-html" accept=".html,text/html"><button id="b-html" class="s">Importer les dossiers</button></div>
 <p class="m" style="margin-top:16px"><b>2. Sauvegarde JSON</b> : restaure un fichier produit par « Exporter » ci-dessous (ou une migration préparée par Claude).</p>
 <div class="row"><input type="file" id="f-json" accept=".json,application/json"><label><input type="checkbox" id="ow"> écraser les documents existants</label><button id="b-json" class="s">Restaurer</button></div>
+<p class="m" style="margin-top:16px"><b>3. Pièces jointes</b> : sélectionnez les fichiers fournis avec la migration (leur nom, du type <code>37a2b5….pdf</code>, ne doit pas être modifié). Ceux déjà présents sont ignorés.</p>
+<div class="row"><input type="file" id="f-att" multiple><button id="b-att" class="s">Importer les pièces jointes</button></div>
 <div id="log"></div>
 </section>
 

@@ -148,6 +148,21 @@
     catch (x) { log('Erreur : ' + x.message); }
   };
 
+  /* ---------- pièces jointes migrées (nom de fichier = identifiant) ---------- */
+  $('#b-att').onclick = async () => {
+    const L = [...$('#f-att').files]; if (!L.length) return alert('Choisissez les fichiers.');
+    let n = 0, skip = 0, ko = 0;
+    for (const f of L) {
+      const id = f.name.replace(/\.[^.]*$/, '');
+      if (!/^[a-z0-9]{8,64}$/i.test(id)) { log('Ignoré (nom non reconnu) : ' + f.name); ko++; continue; }
+      const { error } = await sb.storage.from('assets').upload(id, f, { contentType: f.type || 'application/octet-stream', upsert: false });
+      if (!error) { n++; log('✓ ' + f.name); }
+      else if (/exists|duplicate/i.test(error.message)) { skip++; log('déjà présent : ' + f.name); }
+      else { ko++; log('Erreur ' + f.name + ' : ' + error.message); }
+    }
+    log('Terminé : ' + n + ' fichier(s) importé(s), ' + skip + ' déjà présent(s), ' + ko + ' en erreur.');
+  };
+
   /* ---------- export ---------- */
   $('#b-exp').onclick = async () => {
     const out = { app: 'planet-claim', version: 1, exported: new Date().toISOString(), collections: {} };

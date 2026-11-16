@@ -176,12 +176,20 @@
   }, true);
 
   /* ---------- utilisateur ---------- */
+  let LEGACY = null;
   const USER = {
     async me() { return { id: SESSION.uid, name: SESSION.name }; },
     async profiles(ids) {
       const out = {}, L = [...new Set(ids || [])].filter(x => /^[0-9a-f-]{36}$/i.test(x));
       if (L.length) { const { data } = await sb.from('profiles').select('uid,name').in('uid', L); (data || []).forEach(p => (out[p.uid] = { name: p.name })); }
       if (SESSION && (ids || []).includes(SESSION.uid)) out[SESSION.uid] = { name: SESSION.name };
+      // Auteurs repris de claude.ai : identifiants "u_…" (noms dans config/legacy_names) ou noms déjà en clair.
+      const old = [...new Set(ids || [])].filter(x => x && !L.includes(x));
+      if (old.length) {
+        if (!LEGACY) LEGACY = fetchDoc('config', 'legacy_names').then(d => (d && d.names) || {}).catch(() => ({}));
+        const ln = await LEGACY;
+        old.forEach(x => { const n = ln[x] || (/^(u_|fict_)/.test(x) ? '' : x); if (n) out[x] = { name: n }; });
+      }
       return out;
     },
     async search(q) {
