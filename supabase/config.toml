@@ -1,0 +1,4 @@
+# Utilisé seulement si vous déployez avec la ligne de commande Supabase (facultatif).
+# La fonction vérifie elle-même le jeton de l'utilisateur et son rôle admin.
+[functions.admin-users]
+verify_jwt = false

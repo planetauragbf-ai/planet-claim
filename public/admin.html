@@ -15,15 +15,24 @@ button{padding:8px 14px;border-radius:6px;border:1px solid var(--ac);background:
 button.s{background:transparent;color:var(--ac)}button.d{background:transparent;color:var(--ko);border-color:var(--ko)}button:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row input{flex:1 1 200px}
 table{width:100%;border-collapse:collapse;margin-top:12px}td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--ln);overflow-wrap:anywhere}th{font-weight:600;font-size:12px;color:var(--mut)}
-.tw{overflow-x:auto}#log{white-space:pre-wrap;font:12px ui-monospace,monospace;color:var(--mut);margin-top:10px}a{color:var(--ac)}
+.tw{overflow-x:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;align-items:end}.grid label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mut)}.grid input,.grid select{width:100%}
+#pwbox{margin:14px 0 0;padding:14px 16px;border:1px solid var(--ok);border-radius:8px;background:color-mix(in srgb,var(--ok) 10%,var(--sf))}#pwbox code{font:600 16px ui-monospace,monospace;letter-spacing:.5px;user-select:all}
+td select{padding:4px 6px}td .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}td button{padding:5px 10px;font-size:12px}.warn{color:var(--ko)}#log{white-space:pre-wrap;font:12px ui-monospace,monospace;color:var(--mut);margin-top:10px}a{color:var(--ac)}
 </style></head><body><main>
 <p><a href="/">← Retour à l’application</a></p>
 <h1>Administration</h1><p class="m" id="who"></p>
 
 <section><h2>Accès</h2>
-<p class="m">Seules les adresses listées ici ont accès (le compte de connexion se crée dans Supabase, voir le guide). <b>staff</b> = équipe (lecture/écriture), <b>cf</b> = Coste Fermon (espace partagé en lecture), <b>admin</b> = gestion complète.</p>
-<form id="add" class="row"><input id="a-e" type="email" placeholder="e-mail" required><input id="a-n" placeholder="Nom affiché"><select id="a-r"><option>staff</option><option>cf</option><option>admin</option></select><button>Ajouter</button></form>
-<div class="tw"><table><thead><tr><th>E-mail</th><th>Nom</th><th>Rôle</th><th></th></tr></thead><tbody id="mem"></tbody></table></div>
+<p class="m"><b>staff</b> = équipe (lecture/écriture) · <b>cf</b> = Coste Fermon (espace partagé en lecture) · <b>admin</b> = gestion complète. Le compte est créé directement dans Supabase, déjà confirmé.</p>
+<form id="add" class="grid">
+<label>E-mail<input id="a-e" type="email" autocomplete="off" required></label>
+<label>Nom affiché<input id="a-n" autocomplete="off" placeholder="Prénom Nom"></label>
+<label>Rôle<select id="a-r"><option value="staff">staff (équipe)</option><option value="cf">cf (Coste Fermon)</option><option value="admin">admin</option></select></label>
+<label>Mot de passe provisoire<input id="a-p" type="text" autocomplete="off" minlength="10" placeholder="vide = automatique"></label>
+<button id="a-go">Créer l’accès</button></form>
+<div id="pwbox" hidden></div>
+<p class="m" id="fnwarn" hidden></p>
+<div class="tw"><table><thead><tr><th>E-mail</th><th>Nom</th><th>Rôle</th><th>Dernière connexion</th><th></th></tr></thead><tbody id="mem"></tbody></table></div>
 </section>
 
 <section><h2>Importer des données</h2>

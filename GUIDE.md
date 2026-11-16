@@ -86,15 +86,35 @@ insert into public.members (email, role, name) values (lower('prenom.nom@planeta
 
 3. Ouvrez `https://planet-claim.netlify.app`, connectez-vous, puis changez le mot de passe avec le bouton **Mot de passe** en bas à gauche.
 
-## Étape 7 — Importer les dossiers et inviter l’équipe (10 min)
+## Étape 6 bis — Installer la création des comptes depuis l’application (5 min)
+
+Pour créer les comptes directement depuis la page Administration, installez une fois la petite fonction `admin-users`. Elle tourne chez Supabase et garde la clé secrète de son côté : cette clé n’arrive jamais dans le navigateur.
+
+1. 👉 <https://supabase.com/dashboard/project/_/functions> → bouton **Deploy a new function** → **Via Editor**.
+2. Nom de la fonction (en haut, à la place de `hello-world` ou du nom proposé) : **`admin-users`**, exactement.
+3. Effacez tout le code d’exemple. Ouvrez [`supabase/functions/admin-users/index.ts`](supabase/functions/admin-users/index.ts) sur GitHub → bouton *Copy raw file* → collez dans l’éditeur.
+4. **Deploy function** (en bas à droite). Attendez le message de réussite.
+5. Onglet **Details** (ou **Settings**) de la fonction → désactivez **Verify JWT with legacy secret** (ou « Enforce JWT verification ») → **Save**. La fonction contrôle elle-même la connexion et le rôle admin.
+
+Vérification : sur la page `/admin`, aucun message rouge « Création automatique des comptes indisponible » ne doit apparaître, et la colonne **Dernière connexion** est remplie.
+
+## Étape 7 — Importer les dossiers et inviter l’équipe (5 min)
 
 1. Ouvrez `https://planet-claim.netlify.app/admin`.
 2. **Importer les dossiers** → choisissez le fichier `Suivi_des_sinistres.html` exporté depuis claude.ai → les 92 dossiers sont ajoutés (ceux déjà présents ne sont jamais écrasés).
-3. Pour **chaque personne** (collègue ou contact Coste Fermon) :
-   1. Supabase → *Authentication → Users → Add user → Create new user* (e-mail, mot de passe provisoire, **Auto Confirm User** coché) ;
-   2. page Administration → **Accès** → e-mail + nom + rôle (`staff` ou `cf`) → *Ajouter* ;
-   3. envoyez-lui l’adresse du site et le mot de passe provisoire **par deux canaux différents** (ex. e-mail + SMS). Il le change au premier usage via le bouton **Mot de passe**.
-4. **Sauvegarde** : bouton *Exporter la base* chaque semaine, fichier rangé dans un Drive à accès restreint (il contient des données clients).
+3. Pour **chaque personne**, cadre **Accès** :
+   1. son e-mail, son nom et son rôle (`staff` pour l’équipe, `cf` pour Coste Fermon). Laissez le mot de passe vide : il est généré automatiquement ;
+   2. **Créer l’accès** : le compte est créé dans Supabase, déjà confirmé, et l’accès est enregistré ;
+   3. un cadre vert affiche le **mot de passe provisoire**. Il n’est montré qu’une fois. **Copier le message à envoyer** copie un texte prêt à envoyer (adresse, identifiant, mot de passe). Idéalement, envoyez le mot de passe par un autre canal que l’adresse (SMS, téléphone) ;
+   4. la personne le change au premier usage, avec le bouton **Mot de passe** en bas à gauche.
+4. Dans la liste, pour chaque personne :
+   - **Rôle** : à changer dans le menu déroulant, c’est enregistré immédiatement ;
+   - **Nouveau mot de passe** : en cas d’oubli, en génère un nouveau provisoire, et l’ancien ne marche plus ;
+   - **Supprimer** : supprime le compte **et** l’accès dans Supabase ;
+   - **Dernière connexion** : pour repérer les comptes inutilisés.
+5. **Sauvegarde** : bouton *Exporter la base* chaque semaine, fichier rangé dans un Drive à accès restreint (il contient des données clients).
+
+> Sans l’étape 6 bis, la page fonctionne quand même : créez le compte dans Supabase (*Authentication → Users → Add user*, **Auto Confirm User** coché) puis ajoutez l’accès ici.
 
 > Les données saisies dans l’artifact claude.ai après sa création (au-delà des 92 dossiers d’origine) sont dans la base de claude.ai. Claude peut les extraire en un fichier de sauvegarde à restaurer avec **Restaurer** (page Administration). Les pièces jointes sont à ré-attacher ou à migrer séparément.
 
@@ -106,13 +126,13 @@ insert into public.members (email, role, name) values (lower('prenom.nom@planeta
 - [ ] Dépôt GitHub en **privé** (*Settings → General → Danger Zone → Change visibility*).
 - [ ] « Allow new users to sign up » **désactivé** (étape 3.2).
 - [ ] Clé `service_role` jamais copiée nulle part.
-- [ ] Départ d’une personne : *Retirer* dans Administration (accès coupé immédiatement) **et** suppression du compte dans *Authentication → Users*.
+- [ ] Départ d’une personne : **Supprimer** dans Administration (compte et accès supprimés immédiatement).
 - [ ] Export hebdomadaire de la base.
 - [ ] Ne jamais déposer sur GitHub le fichier HTML d’origine ni une sauvegarde JSON (le `.gitignore` les bloque déjà).
 
 ## Options
 
-**Connexion « Se connecter avec Google »** (pratique si l’équipe utilise Gmail/Google Workspace) : Supabase → *Authentication → Providers → Google* suit un pas-à-pas qui demande de créer un « identifiant OAuth » dans <https://console.cloud.google.com> (≈ 10 min). Les personnes doivent quand même avoir été créées (étape 7.3.1) : Google ne sert qu’à se connecter sans mot de passe.
+**Connexion « Se connecter avec Google »** (pratique si l’équipe utilise Gmail/Google Workspace) : Supabase → *Authentication → Providers → Google* suit un pas-à-pas qui demande de créer un « identifiant OAuth » dans <https://console.cloud.google.com> (≈ 10 min). Les personnes doivent quand même avoir été créées (étape 7.3) : Google ne sert qu’à se connecter sans mot de passe.
 
 **« Mot de passe oublié » par e-mail** : l’envoi d’e-mails intégré à Supabase est très limité (quelques e-mails par heure). Pour un usage fiable, branchez un service d’envoi gratuit (Brevo, Resend…) dans *Authentication → Emails → SMTP Settings*. Sinon, vous pouvez toujours redéfinir un mot de passe depuis *Authentication → Users*.
 
@@ -136,6 +156,7 @@ Tout le reste fonctionne à l’identique, **y compris le temps réel** : une mo
 
 - `public/index.html` : application d’origine générée par `scripts/build.py` (enveloppe claude.ai retirée, données embarquées vidées).
 - `public/runtime.js` : réimplémente `window.claude.use('db' | 'assets' | 'user')` sur supabase-js 2.45.4 (copie locale dans `public/vendor/`). L’API Firestore-like de l’app (`collection/doc/get/set/delete/onSnapshot/orderBy/limit`) est servie par la table `docs (col, id, data jsonb)` avec cache local, application immédiate des écritures et un canal Realtime unique (resynchronisation à la reconnexion). Les liens `/_blob/<id>` sont interceptés et téléchargés avec le jeton de l’utilisateur.
+- `supabase/functions/admin-users/index.ts` : Edge Function (Deno) qui crée, liste, réinitialise et supprime les comptes avec la clé service_role côté serveur ; refuse tout appelant qui n’est pas admin avec un e-mail confirmé.
 - `supabase/schema.sql` : tables, fonctions `my_role()/is_staff()/is_admin()/cf_can_read()`, politiques RLS (tables + storage), publication Realtime. Idempotent.
 - `public/_headers` : CSP stricte (uniquement le site, `*.supabase.co`, Google Fonts et cdnjs pour l’export Excel), lue par Netlify ou Cloudflare Pages.
 - Testé de bout en bout sur la pile Supabase locale (26 contrôles) : import, ré-import sans écrasement, export, modification via l’interface, temps réel entre deux sessions (mise à jour et suppression), tri/limite, fichiers, cloisonnement Coste Fermon (dossiers et fichiers), élévation de droits refusée, compte non inscrit, e-mail non confirmé et accès anonyme refusés.
