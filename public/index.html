@@ -1285,4 +1285,5 @@ if(!b){b=document.createElement('div');b.id='pdbar';b.setAttribute('popover','ma
 b.innerHTML='<span><b>'+PEND.size+'</b> modification'+(PEND.size>1?'s':'')+' non enregistrée'+(PEND.size>1?'s':'')+'</span><button type="button" id="pd-x">Annuler</button><button type="button" id="pd-ok" class="p">ENREGISTRER</button>';try{b.hidePopover()}catch(_){}const dl=[...document.querySelectorAll('dialog[open]')].pop(),hs=dl||document.body;if(b.parentNode!==hs)hs.appendChild(b);try{b.showPopover()}catch(_){}}
 document.addEventListener('close',()=>{if(PEND.size)setTimeout(pendBar,0)},true);document.addEventListener('click',async e=>{if(e.target.id==='pd-x'){if(confirm('Abandonner les modifications non enregistrées ?')){PEND.clear();window.onbeforeunload=null;location.reload()}return}
 if(e.target.id==='pd-ok'){const b=e.target;b.disabled=true;let ko=0;for(const [k,o] of [...PEND]){try{await o.run();PEND.delete(k)}catch(x){ko++}}pendBar();toast(ko?ko+' modification(s) non enregistrée(s)':'Modifications enregistrées')}});
-</script></body></html>
+</script><script src="ext.js"></script>
+</body></html>

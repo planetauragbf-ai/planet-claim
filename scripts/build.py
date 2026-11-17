@@ -7,7 +7,8 @@ Usage :  python3 scripts/build.py chemin/vers/Suivi_des_sinistres.html
 - vide les données d'exemple embarquées (const SEED=[...]) : elles contiennent des
   données clients et seraient lisibles par n'importe qui, sans connexion. Elles se
   réimportent dans la base via admin.html ;
-- branche Supabase (bibliothèque + supabase-config.js + runtime.js) avant le script de l'app.
+- branche Supabase (bibliothèque + supabase-config.js + runtime.js) avant le script de l'app,
+  et ext.js (compléments d'ergonomie) après.
 Le fichier d'origine ne doit pas être versionné (voir .gitignore).
 """
 import json, re, sys, pathlib
@@ -42,6 +43,9 @@ def build(src: str) -> str:
     if k == -1:
         sys.exit("Balise <script> de l'application introuvable.")
     src = src[:k] + INJECT + src[k:]
+
+    # compléments d'ergonomie (public/ext.js), après le script de l'application
+    src = src[: src.rstrip().rfind("</body>")] + '<script src="ext.js"></script>\n</body></html>\n'
 
     # favicon + interdiction d'indexation
     src = src.replace("<title>", '<meta name="robots" content="noindex,nofollow"><link rel="icon" href="favicon.svg"><title>', 1)
