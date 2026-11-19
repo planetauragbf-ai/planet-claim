@@ -202,13 +202,30 @@
     async can(p) { return p === 'data.write' ? (SESSION.role === 'admin' || SESSION.role === 'staff') : SESSION.role === 'admin'; }
   };
 
+  /* ---------- téléchargements (exports CSV/Excel, fiches) ---------- */
+  const MIME = { csv: 'text/csv;charset=utf-8', xls: 'application/vnd.ms-excel;charset=utf-8', html: 'text/html;charset=utf-8', json: 'application/json', txt: 'text/plain;charset=utf-8' };
+  const DOWNLOADS = {
+    async save(o) {
+      const name = String((o && o.filename) || 'export.txt').replace(/[\\/:*?"<>|]+/g, '_');
+      const ext = (name.split('.').pop() || '').toLowerCase();
+      const data = o && o.data;
+      const blob = data instanceof Blob ? data : new Blob([data == null ? '' : data], { type: (o && o.mimeType) || MIME[ext] || 'application/octet-stream' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      return { ok: true };
+    }
+  };
+
   window.claude = {
     async use(name) {
       await ready;
       if (name === 'db') return DB;
       if (name === 'assets') return SESSION.role === 'cf' ? null : ASSETS;
       if (name === 'user') return USER;
-      return null; // mcp, sample, comments : non disponibles hors claude.ai
+      if (name === 'downloads') return DOWNLOADS;
+      return null; // mcp (Gmail), sample (IA), comments : non disponibles hors claude.ai
     }
   };
   window.PCRT = { sb, ready, session: () => SESSION, signOut: () => sb.auth.signOut() };
